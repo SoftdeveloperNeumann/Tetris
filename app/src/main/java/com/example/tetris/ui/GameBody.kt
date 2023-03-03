@@ -28,6 +28,11 @@ import com.example.tetris.ui.theme.ScreenBackground
 import com.example.tetris.ui.theme.TetrisTheme
 
 
+val SettingButtonSize = 16.dp
+val DirectionButtonSize = 64.dp
+val RotateButtonSize = 96.dp
+
+
 @Composable
 fun GameBody(
     clickabel: Clickable = combinedClickable(),
@@ -77,17 +82,18 @@ fun GameBody(
             ) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawScreenBorder(
-                        Offset(0f,0f),
-                        Offset(size.width,0f),
-                        Offset(0f,size.height),
-                        Offset(size.width,size.height)
+                        Offset(0f, 0f),
+                        Offset(size.width, 0f),
+                        Offset(0f, size.height),
+                        Offset(size.width, size.height)
                     )
                 }
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(6.dp)
-                    .background(ScreenBackground)
-                ){
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(6.dp)
+                        .background(ScreenBackground)
+                ) {
                     screen()
                 }
 
@@ -96,8 +102,9 @@ fun GameBody(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        val SettingText = @Composable { text:String, modifier: Modifier ->
-            Text(text = text,
+        val SettingText = @Composable { text: String, modifier: Modifier ->
+            Text(
+                text = text,
                 modifier = modifier,
                 fontSize = 12.sp,
                 color = Color.Red,
@@ -107,11 +114,40 @@ fun GameBody(
 
         // Buttons Settings
 
-        Column(Modifier.padding(start =  40.dp, end =  40.dp)) {
-            Row{
+        Column(Modifier.padding(start = 40.dp, end = 40.dp)) {
+            Row {
                 SettingText(stringResource(id = R.string.button_sounds), Modifier.weight(1f))
                 SettingText(stringResource(id = R.string.button_pause), Modifier.weight(1f))
                 SettingText(stringResource(id = R.string.button_reset), Modifier.weight(1f))
+            }
+            Spacer(modifier = Modifier.height(5.dp))
+            Row {
+                //Sound
+                GameButton(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 20.dp, end = 20.dp),
+                    onClick = { clickabel.onMute },
+                    size = SettingButtonSize,
+                ) {}
+
+                // Pause
+                GameButton(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 20.dp, end = 20.dp),
+                    onClick = { clickabel.onPause },
+                    size = SettingButtonSize,
+                ) {}
+
+                //Reset
+                GameButton(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 20.dp, end = 20.dp),
+                    onClick = { clickabel.onRestart },
+                    size = SettingButtonSize,
+                ) {}
             }
         }
 
