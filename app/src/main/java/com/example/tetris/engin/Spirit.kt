@@ -2,6 +2,7 @@ package com.example.tetris.engin
 
 import androidx.compose.ui.geometry.Offset
 import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 
 data class Spirit(
@@ -35,7 +36,70 @@ data class Spirit(
         return moveBy(xOffset to yOffset)
     }
 
+
+
+
     companion object {
         val Empty = Spirit()
     }
+}
+
+val SpiritType = listOf(
+    listOf(
+        Offset(1, -1),
+        Offset(1, 0),
+        Offset(0, 0),
+        Offset(0, 1)
+    ),//Z
+    listOf(
+        Offset(0, -1),
+        Offset(0, 0),
+        Offset(1, 0),
+        Offset(1, 1)
+    ),//S
+    listOf(
+        Offset(0, -1),
+        Offset(0, 0),
+        Offset(0, 1),
+        Offset(0, 2)
+    ),//I
+    listOf(
+        Offset(0, 1),
+        Offset(0, 0),
+        Offset(0, -1),
+        Offset(1, 0)
+    ),//T
+    listOf(
+        Offset(1, 0),
+        Offset(0, 0),
+        Offset(1, -1),
+        Offset(0, -1)
+    ),//O
+    listOf(
+        Offset(0, -1),
+        Offset(1, -1),
+        Offset(1, 0),
+        Offset(1, 1)
+    ),//L
+    listOf(
+        Offset(1, -1),
+        Offset(0, -1),
+        Offset(0, 0),
+        Offset(0, 1)
+    )//J
+)
+
+
+fun Spirit.isValidInMatrix(blocks: List<Brick>, matrix: Pair<Int, Int>): Boolean {
+    return location.none { location ->
+        location.x < 0 || location.x > matrix.first - 1 || location.y > matrix.second - 1 ||
+                blocks.any { it.location.x == location.x && it.location.y == location.y }
+    }
+}
+
+
+fun generateSpiritReverse(matrix: Pair<Int, Int>): List<Spirit> {
+    return SpiritType.map {
+        Spirit(it, Offset(Random.nextInt(matrix.first - 1), -1)).adjustOffset(matrix, false)
+    }.shuffled()
 }
