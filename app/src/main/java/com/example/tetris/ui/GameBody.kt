@@ -1,5 +1,6 @@
 package com.example.tetris.ui
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -125,7 +126,7 @@ fun GameBody(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 20.dp, end = 20.dp),
-                    onClick = { clickabel.onMute },
+                    onClick = { clickabel.onMute() },
                     size = SettingButtonSize,
                 ) {}
 
@@ -134,7 +135,7 @@ fun GameBody(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 20.dp, end = 20.dp),
-                    onClick = { clickabel.onPause },
+                    onClick = { clickabel.onPause() },
                     size = SettingButtonSize,
                 ) {}
 
@@ -143,7 +144,7 @@ fun GameBody(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 20.dp, end = 20.dp),
-                    onClick = { clickabel.onRestart },
+                    onClick = { clickabel.onRestart() },
                     size = SettingButtonSize,
                 ) {}
             }
@@ -211,7 +212,7 @@ fun GameBody(
                 GameButton(
                     size = RotateButtonSize,
                     modifier = Modifier.align(Alignment.CenterEnd),
-                    onClick = {clickabel.onRotate},
+                    onClick = {clickabel.onRotate()},
                     autoInvokeWhenPressed = false
                 ){
                     ButtonText(it, stringResource(id = R.string.button_rotate))
@@ -263,7 +264,7 @@ fun DrawScope.drawScreenBorder(
 
 }
 
-data class Clickable(
+data class Clickable constructor(
     val onMove: (Direction) -> Unit,
     val onRotate: () -> Unit,
     val onRestart: () -> Unit,
@@ -271,7 +272,7 @@ data class Clickable(
     val onMute: () -> Unit
 )
 
-fun combinedClickable(
+fun combinedClickable (
     onMove: (Direction) -> Unit = {},
     onRotate: () -> Unit = {},
     onRestart: () -> Unit = {},

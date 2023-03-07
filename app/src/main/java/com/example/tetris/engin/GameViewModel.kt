@@ -1,5 +1,8 @@
 package com.example.tetris.engin
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,13 +13,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.min
 
-class GameViewModel : ViewModel(){
+class GameViewModel : ViewModel() {
 
-    private val _viewState = mutableStateOf(ViewState())
-    val viewState = _viewState
+    private val _viewState: MutableState<ViewState> = mutableStateOf(ViewState())
+    val viewState : State<ViewState> = _viewState
+
 
     fun dispatch(action: Action) =
         reduce(viewState.value, action)
+
 
     private fun reduce(state: ViewState, action: Action) {
         viewModelScope.launch {
@@ -200,6 +205,12 @@ class GameViewModel : ViewModel(){
         _viewState.value = state
     }
 
+    /**
+     * Return a [Triple] to store clear-info for bricks:
+     * - [Triple.first]:  Bricks before line clearing (Current bricks plus Spirit)
+     * - [Triple.second]: Bricks after line cleared but not offset (bricks minus lines should be cleared)
+     * - [Triple.third]: Bricks after line cleared (after bricks offset)
+     */
     private fun updateBricks(
         curBricks: List<Brick>,
         spirit: Spirit,
@@ -237,7 +248,7 @@ class GameViewModel : ViewModel(){
         val score: Int = 0,
         val line: Int = 0,
         val isMute: Boolean = false,
-    ){
+    ) {
         val level: Int
             get() = min(10, 1 + line / 20)
 
@@ -250,10 +261,8 @@ class GameViewModel : ViewModel(){
         val isRuning
             get() = gameStatus == GameStatus.Running
     }
+
 }
-
-
-
 
 sealed interface Action {
     data class Move(val direction: Direction) : Action
@@ -265,6 +274,7 @@ sealed interface Action {
     object GameTick : Action
     object Mute : Action
 }
+
 enum class GameStatus {
     Onboard,
     Running,

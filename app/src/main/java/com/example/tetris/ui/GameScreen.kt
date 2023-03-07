@@ -23,17 +23,15 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tetris.R
+import com.example.tetris.engin.*
 import com.example.tetris.ui.theme.BrickMatrix
 import com.example.tetris.ui.theme.BrickSpirit
 import com.example.tetris.ui.theme.ScreenBackground
-import com.example.tetris.R
-import com.example.tetris.engin.*
-
 import kotlin.math.min
 
 
@@ -113,7 +111,7 @@ fun GameScoreboard(
                 .weight(0.35f)
         ) {
             Text(text = "Score", fontSize = textSize)
-            LedNumber(Modifier.fillMaxWidth(), digits = 6)
+            LedNumber(Modifier.fillMaxWidth(),score, digits = 6)
 
             Spacer(modifier = Modifier.height(margin))
 

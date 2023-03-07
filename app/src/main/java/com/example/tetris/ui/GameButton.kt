@@ -1,5 +1,6 @@
 package com.example.tetris.ui
 
+import android.util.Log
 import android.view.MotionEvent.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,7 +34,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun GameButton(
@@ -51,64 +51,71 @@ fun GameButton(
         mutableStateOf<PressInteraction.Press?>(null)
     }
     val interactionSource = MutableInteractionSource()
-    Box(modifier = modifier
-        .shadow(5.dp, shape = backgroundShape)
-        .size(size)
-        .clip(backgroundShape)
-        .background(
-            brush = Brush.verticalGradient(
-                colors = listOf(Purple200, Purple500),
-                startY = 0f,
-                endY = 80f
-            )
-        ).indication(interactionSource, rememberRipple()).run {
-            if (autoInvokeWhenPressed) {
-                pointerInteropFilter {
-                    when (it.action) {
-                        ACTION_DOWN -> {
-                            coroutineScope.launch {
-                                pressedInteraction.value?.let { oldValue ->
-                                    val interaction = PressInteraction.Cancel(oldValue)
+    Box(
+        modifier = modifier
+            .shadow(5.dp, shape = backgroundShape)
+            .size(size)
+            .clip(backgroundShape)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Purple200, Purple500),
+                    startY = 0f,
+                    endY = 80f
+                )
+            ).indication(interactionSource, rememberRipple())
+            .run {
+                if (autoInvokeWhenPressed) {
+
+                    pointerInteropFilter {
+                        Log.d("TAG", "GameButton: ${it.action} ")
+                        when (it.action) {
+
+                            ACTION_DOWN -> {
+                                coroutineScope.launch {
+                                    pressedInteraction.value?.let { oldValue ->
+                                        val interaction = PressInteraction.Cancel(oldValue)
+                                        interactionSource.emit(interaction)
+                                        pressedInteraction.value = null
+                                    }
+                                    val interaction = PressInteraction.Press(Offset(50f, 50f))
                                     interactionSource.emit(interaction)
-                                    pressedInteraction.value = null
+                                    pressedInteraction.value = interaction
                                 }
-                                val interaction = PressInteraction.Press(Offset(50f, 50f))
-                                interactionSource.emit(interaction)
-                                pressedInteraction.value = interaction
-                            }
-                            ticker = ticker(60, 300)
-                            coroutineScope.launch {
-                                ticker.receiveAsFlow()
-                                    .collect { onClick() }
-                            }
-                        }
-                        ACTION_CANCEL, ACTION_UP ->{
-                            coroutineScope.launch {
-                                pressedInteraction.value?.let {
-                                    val interaction = PressInteraction.Cancel(it)
-                                    interactionSource.emit(interaction)
-                                    pressedInteraction.value = null
+                                ticker = ticker(60, 300)
+                                Log.d("TAG", "GameButton: Ticker gesetzt")
+                                coroutineScope.launch {
+                                    ticker.receiveAsFlow()
+                                        .collect { onClick() }
                                 }
+
                             }
-                            ticker.cancel()
-                            if(it.action == ACTION_UP){
-                                onClick()
-                            }
-                        }
-                        else ->{
-                            if(it.action != ACTION_MOVE){
+                            ACTION_CANCEL, ACTION_UP -> {
+                                coroutineScope.launch {
+                                    pressedInteraction.value?.let {
+                                        val interaction = PressInteraction.Cancel(it)
+                                        interactionSource.emit(interaction)
+                                        pressedInteraction.value = null
+                                    }
+                                }
                                 ticker.cancel()
+                                if (it.action == ACTION_UP) {
+                                    onClick()
+                                }
                             }
-                            return@pointerInteropFilter false
+                            else -> {
+                                if (it.action != ACTION_MOVE) {
+                                    ticker.cancel()
+                                }
+                                return@pointerInteropFilter false
+                            }
                         }
+                        true
                     }
-                    true
+                } else {
+                    clickable { onClick() }
                 }
-            }else{
-                clickable { onClick() }
             }
-        }
-    ){
+    ) {
         content(Modifier.align(Alignment.Center))
     }
 
