@@ -149,7 +149,7 @@ fun GameBody(
             }
         }
 
-        Spacer(modifier = Modifier.height(128.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         // Buttons Spielsteuerung
 
@@ -183,7 +183,7 @@ fun GameBody(
                     size = DirectionButtonSize,
                     modifier = Modifier.align(Alignment.CenterStart),
                     onClick = { clickabel.onMove(Direction.Left) },
-                    autoInvokeWhenPressed = false,
+                    autoInvokeWhenPressed = true,
                 ){
                     ButtonText(it, stringResource(id = R.string.button_left))
                 }
@@ -191,7 +191,7 @@ fun GameBody(
                     size = DirectionButtonSize,
                     modifier = Modifier.align(Alignment.CenterEnd),
                     onClick = { clickabel.onMove(Direction.Right) },
-                    autoInvokeWhenPressed = false,
+                    autoInvokeWhenPressed = true,
                 ){
                     ButtonText(it, stringResource(id = R.string.button_right))
                 }
@@ -199,7 +199,7 @@ fun GameBody(
                     size = DirectionButtonSize,
                     modifier = Modifier.align(Alignment.BottomCenter),
                     onClick = { clickabel.onMove(Direction.Down) },
-                    autoInvokeWhenPressed = false,
+                    autoInvokeWhenPressed = true,
                 ){
                     ButtonText(it, stringResource(id = R.string.button_down))
                 }
